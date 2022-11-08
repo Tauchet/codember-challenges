@@ -1,11 +1,9 @@
 {
-  "name": "codember-challenges",
+  "name": "codember-challenge-01",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "scripts": {
-    "1": "node challenge-01/challenge-01.js"
-  },
+  "scripts": {},
   "keywords": [],
   "author": "",
   "license": "ISC"
