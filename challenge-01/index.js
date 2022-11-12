@@ -1,41 +1,34 @@
 const fs = require('fs');
 const path = require('path');
 
-const DATA = (String(fs.readFileSync(path.join(__dirname, 'users.txt'))) + "\n")
-    .split('\n')
-    // Windows mode
-    .map(x => x.replace('\r', ''));
-
-const KEYS = ['usr', 'eme', 'psw', 'age', 'loc', 'fll'];
-
-const validateUser = (user) => {
-    const userKeys = Object.keys(user);
-    return KEYS.filter(x => !userKeys.includes(x)).length == 0;
-}
-
-var lastValidUser = null;
-var lastUser = {};
-var validUsers = 0;
-
-for (let line of DATA) {
-
-    if (line.length === 0) {
-        // Cambio de usuario.
-        if (validateUser(lastUser)) {
-            validUsers++;
-            lastValidUser = lastUser;
-        }
-        lastUser = {};
-        continue;
+const file = String(fs.readFileSync(path.join(__dirname, 'users.txt')));
+const keys = ['usr:', 'eme:', 'psw:', 'age:', 'loc:', 'fll:'];
+const users = file
+  // Separa por líneas
+  .split('\n')
+  // Modo Windows
+  .map(x => x.replace('\r', ''))
+  // Juntamos los usuarios
+  .reduce((array, element) => {
+    
+    // Es un nuevo usuario cuando es una linea vacía
+    if (element.length === 0) {
+      array.push("");
+      return array;
     }
+    
+    // Agrupando los usuarios
+    let lastElement = array[array.length - 1];
+    lastElement += lastElement.length > 0 ? " " : "";
+    lastElement += element;
+    array[array.length - 1] = lastElement;
+    return array;
+    
+  }, [""])
 
-    const lineArgs = line.split(" ");
-    for (let data of lineArgs) {
-        const [key, value] = data.split(":", 2);
-        lastUser[key] = value;
-    }
+  // Filtramos los que tengan todas las llaves requeridas.
+  .filter(x => x.length !== 0 && keys.every(k => x.includes(k)))
 
-}
 
-console.log("Cantidad de usuarios validos:", validUsers);
-console.log("Último usuario valido:", lastValidUser);
+console.log("Total de usuarios validos =", users.length)
+console.log("Último usuario valido =", users[users.length - 1])
