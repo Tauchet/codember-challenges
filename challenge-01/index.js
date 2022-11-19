@@ -18,7 +18,7 @@ const users = file
     }
     
     // Agrupando los usuarios
-    let lastElement = array[array.length - 1];
+    let lastElement = array[array.length - 1]
     lastElement += lastElement.length > 0 ? " " : "";
     lastElement += element;
     array[array.length - 1] = lastElement;
